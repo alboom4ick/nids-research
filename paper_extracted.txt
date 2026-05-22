@@ -1,0 +1,1557 @@
+PLOS ONE
+
+RESEARCH ARTICLE
+A hybrid feature weighted attention based deep learning approach for an intrusion detection system using the random forest algorithm
+
+a1111111111 a1111111111 a1111111111 a1111111111 a1111111111
+
+Arshad Hashmi1*, Omar M. Barukab2, Ahmad Hamza OsmanID1
+1 Faculty of Computing and Information Technology in Rabigh (FCITR), Department of Information Systems, King Abdulaziz University, Jeddah, Saudi Arabia, 2 Faculty of Computing and Information Technology in Rabigh (FCITR), Department of Information Technology, King Abdulaziz University, Jeddah, Saudi Arabia * ahsyed@kau.edu.sa,ahohamed@kau.edu.sa
+Abstract
+
+OPEN ACCESS
+Citation: Hashmi A, Barukab OM, Hamza Osman A (2024) A hybrid feature weighted attention based deep learning approach for an intrusion detection system using the random forest algorithm. PLoS ONE 19(5): e0302294. https://doi.org/10.1371/ journal.pone.0302294
+Editor: Kamran Siddique, University of Alaska Anchorage, UNITED STATES
+Received: June 1, 2023
+Accepted: April 1, 2024
+Published: May 23, 2024
+Copyright: © 2024 Hashmi et al. This is an open access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.
+Data Availability Statement: All relevant data are within the manuscript and its Supporting Information files.
+Funding: This research work was funded by the Institutional Fund Projects under grant no. (IFPIP:653-830-1443). The authors gratefully acknowledge the technical and financial support provided by the Ministry of Education and King Abdulaziz University, DSR, Jeddah, Saudi Arabia The funders had no role in study design, data
+
+Due to the recent advances in the Internet and communication technologies, network systems and data have evolved rapidly. The emergence of new attacks jeopardizes network security and make it really challenging to detect intrusions. Multiple network attacks by an intruder are unavoidable. Our research targets the critical issue of class imbalance in intrusion detection, a reflection of the real-world scenario where legitimate network activities significantly out number malicious ones. This imbalance can adversely affect the learning process of predictive models, often resulting in high false-negative rates, a major concern in Intrusion Detection Systems (IDS). By focusing on datasets with this imbalance, we aim to develop and refine advanced algorithms and techniques, such as anomaly detection, costsensitive learning, and oversampling methods, to effectively handle such disparities. The primary goal is to create models that are highly sensitive to intrusions while minimizing false alarms, an essential aspect of effective IDS. This approach is not only practical for realworld applications but also enhances the theoretical understanding of managing class imbalance in machine learning. Our research, by addressing these significant challenges, is positioned to make substantial contributions to cybersecurity, providing valuable insights and applicable solutions in the fight against digital threats and ensuring robustness and relevance in IDS development. An intrusion detection system (IDS) checks network traffic for security, availability, and being non-shared. Despite the efforts of many researchers, contemporary IDSs still need to further improve detection accuracy, reduce false alarms, and detect new intrusions. The mean convolutional layer (MCL), feature-weighted attention (FWA) learning, a bidirectional long short-term memory (BILSTM) network, and the random forest algorithm are all parts of our unique hybrid model called MCL-FWA-BILSTM. The CNN-MCL layer for feature extraction receives data after preprocessing. After convolution, pooling, and flattening phases, feature vectors are obtained. The BI-LSTM and self-attention feature weights are used in the suggested method to mitigate the effects of class imbalance. The attention layer and the BI-LSTM features are concatenated to create mapped features before feeding them to the random forest algorithm for classification. Our
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+1 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+collection and analysis, decision to publish, or preparation of the manuscript.
+Competing interests: The authors have declared that no competing interests exist.
+
+methodology and model performance were validated using NSL-KDD and UNSW-NB-15, two widely available IDS datasets. The suggested model's accuracies on binary and multiclass classification tasks using the NSL-KDD dataset are 99.67% and 99.88%, respectively. The model's binary and multi-class classification accuracies on the UNSW-NB15 dataset are 99.56% and 99.45%, respectively. Further, we compared the suggested approach with other previous machine learning and deep learning models and found it to outperform them in detection rate, FPR, and F-score. For both binary and multiclass classifications, the proposed method reduces false positives while increasing the number of true positives. The model proficiently identifies diverse network intrusions on computer networks and accomplishes its intended purpose. The suggested model will be helpful in a variety of network security research fields and applications.
+
+I. Introduction
+As Internet services are blossoming nowadays, efficient efforts are required for the identification of wicked, nefarious, or criminal activities over and around the network. Intrusion detection has been one of the best methods for finding anomalies. The network intrusion detection system (NIDS) monitors the network traffic for malicious traffic and policy violations and then generates alerts. Network security is the prime concern these days, and NIDS ensures it via pattern matching and classification of attacks into various classes; hence, this concern might be posed as a classification problem. An intrusion can be defined more appropriately in terms of integrity, confidentiality, and availability, which are the basic objectives of security [1]. When the breaching of these security objectives takes place, an intrusion is said to have occurred. An intrusion passes through. various stages, which are described as the probe stage, the exploitation stage, the action stage, and the masquerading stage. In the probe stage, the intruder can scan the victim's system to find out potential flaws and collect information about the victim's system. There arises the masquerading stage. In the probe stage, the intruder can scan the victim's system to find out potential flaws and collect information about the victim's system. There arises the requirement for an efficient and reliable network intrusion detection method that can distinguish between normal and anomalous activities with a minimum number of false alarms. Due to the demand of the hour, more and more researchers are getting associated with this field and are trying to develop more reliable methods [2]. The major focus of NIDS is to identify the correct type of an attack. Devising effective and precise detection methods is the need of the hour as the attacks are increasing day by day. According to a survey report [3], the most common attacks which have been identified until now include the attacks named Probe, User-to-root, Root-to-local, DoS, Brute-force, Structured Query Language (SQL) Injection, Malware, and phishing. These attacks interfere with the normal functioning of the network by sniffing sensitive information. Network traffic attacks have been classified into five types: DOS (Denial of service attacks), Normal, U2R (user-to-root attacks), Probe (Probing attacks), and R2l (root-to-local attacks). The fundamental problem is the identification of these attacks through the observation of peculiarly unanticipated malignant network traffic.
+In an NIDS, machine learning algorithms are the most frequently used approach to classify network traffic as malicious or normal. Generally, classification approaches make use of shallow understanding and are based on feature learning and extraction. However, they fail to perform over a large amount of data, therefore giving high false alarm rates and low accuracy.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+2 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+There is a need to enhance the efficacy of classifiers in detecting malicious traffic. Several machine-learning technologies [4­8] have been employed for malicious communication identification in response to rising network traffic and the expansion of attack categories. Nonetheless, due to their limitations, traditional machine-learning approaches still need to be improved to meet the requirements of large-scale NIDS [9]. Deep learning (DL), a recent development in machine learning, has advanced in recent years in domains like image processing, natural language processing, and, most notably, network intrusion detection. Even with high-dimensional and unlabelled data, DL techniques attain significant accuracy levels in a short amount of time [10]. Many tedious tasks can be fulfilled with deep learning techniques. Due to the difficulty in categorizing attacks in intrusion detection, deep learning is now necessary [11]. Numerous advanced intrusion detection approaches based on deep learning have been proposed in NIDS, owing to its capacity for acquiring relevant features from voluminous data. Empirical research has demonstrated that deep learning can exhibit remarkable superiority compared to conventional approaches and can augment the effectiveness of attack identification processes [12]. According to research conducted on the KDD Cup'99 datasets [13], employing the LSTM-RNN technique resulted in a notably high detection rate. The study showed that, compared to other methods such as support vector machines (SVM), K-nearest neighbours (KNN), Bayes, probabilistic neural networks (PNNs), and several different neural network models, the performance of LSTM-RNN was superior. Torres et al. [14] investigated the efficacy of recurrent neural networks (RNN) for figuring out how network traffic behaves by modelling it as a sequence of states that evolve over time.
+1. Motivation
+Various deep learning methods, such as the DNN, CNN, LSTM, and RNN, are incorporated into an NIDS. This approach involves neural networks with significant depth for optimal functionality [15]. However, it does not utilize complete domain understanding of the network traffic. Inspired by these research works based on the deep learning approach, we presented our hybrid model called MCL-FWA-BILSTM to tackle the imbalance class issue utilizing the two techniques of the BI-LSTM-based semantic base feature weights and the self-attentionbased feature weights. Both techniques enhanced domain knowledge acquisition and mitigated the effects of class imbalance. Class imbalance in intrusion detection is not just a statistical challenge rather it reflects the asymmetric nature of cybersecurity threats where legitimate network activities vastly outnumber malicious ones. In Section 2, a scholarly analysis of the various intrusion detection system using machine learning and deep learning techniques in the literature is presented.
+2. Challenging issues
+Deep learning techniques enabled the network intrusion detection systems (NIDS) to enhance significantly, producing formidable methods of identifying and mitigating cyber threats. However, despite that significant progress, the NIDSs still have a big problem in detecting some attacks, such as low-traffic attacks, mainly because of the issues of class imbalance occurring inside data sets [16]. In actual network attack conditions, most of the incoming and outgoing network data traffic is a minority part of it. This imbalance causes a significant learning environment distortion for deep learning models, which, in turn, results in much better performance on majority classes than accurately identifying the minority attack traffic. Such an imbalance has dire consequences: the rate of false positives is increased, thus affecting the effectiveness of NIDS, which also drops because of the many undetected cases. The core of the issue lies in the nature of modern NIDS datasets, which aim to mirror real-world traffic
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+3 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+patterns. Realism is critical to enhancing the effective development of NIDS, but at the same time, it also presents one major challenge related to traffic under-representation. For example, deep learning models trained on such data may need to learn more about the characteristics of these less frequent attacks, due to which there is a possibility for them to be omitted or misclassified. This is not a technical problem only; instead, it bears critical vulnerabilities that attackers might use. Hence, the complete detection of any form of attack traffic becomes a paramount object for genuinely effective NIDS. Despite such a crucial need, there needs to be more literature and practice on how to address class imbalance in NIDS. Prior art to improve the performance of NIDS was either naive to the subtleties of class imbalance or needed to provide solutions that curb the problem to a great level. This is actually quite an overlooking surprise, given that an ideal intrusion detection system should be very good at recognizing every form of attack traffic, regardless of its frequency within the dataset. If, in a nutshell, deep learning is the fuel of advancement for NIDS, then class imbalance issues pose a curse. It hampers their potential to detect low-traffic attacks and affects their overall performance. Hence, the most crucial aspect for solving this problem in the next wave of NIDS development is an enhanced effort to refine the deep learning approaches or innovate new strategies that can handle imbalanced data well. Ultimately, the capability sought is one of balanced detection that has the highest possible accuracy along with the lowest possible rate of false alarms across the full range of cyber threat coverage, thereby ensuring the most comprehensive protection of networks.
+3. Contribution
+A novel hybrid deep learning model MCL-FWA-BILSTM is proposed. This model is unique due to its integration of multiple techniques: MCL (Mean Convolutional Layers), CNN (Convolutional Neural Network), BI-LSTM (Bidirectional Long Short-Term Memory), and selfattention mechanisms. The combination of these techniques is novel, particularly in the context of network IDS. Further, the proposed model aims to classify the intrusion into binary and multiclass attack categories. These attack categories are mentioned in Tables 2 and 3. The detailed contribution is described below:
+· Attack Classification and Feature Extraction: The model classifies attacks into specific categories using a combination of CNN-MCL for average convolutional processing and BI-LSTM layers. Self-attention-based feature weighting is employed to enhance feature extraction, which is crucial for dealing with imbalanced datasets.
+· Optimal Random Forest for Imbalanced Datasets: A significant innovation is the use of an optimal random forest algorithm that adjusts the weights of decision trees, giving more importance to minority classes. This approach addresses the class imbalance problem, a common challenge in network security datasets.
+· BI-LSTM for Error Reduction and Feature Integration: The BI-LSTM network minimizes errors and aids in feature integration. It also helps in extracting semantic features, improving the model's performance on imbalanced datasets.
+· Attention Mechanism for Detailed Feature Extraction: The attention mechanism in the BI-LSTM model identifies key features in packet sequence data, enhancing anomaly detection capabilities.
+· Performance Evaluation: The model's performance was evaluated using two benchmark datasets (UNSW-NB15 and NSL-KDD), which are standard in IDS research. Our approach outperformed baseline models and previous research efforts, indicating its effectiveness in real-world scenarios
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+4 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+4. Novelty
+The novelty lies in the hybrid approach combining deep learning with an ensemble technique for feature selection. This approach is particularly effective for handling imbalanced datasets and improving predictions for minority classes. The proposed model comprises three key components, starting with the Convolutional Neural Network (CNN), which is responsible for the non-linear mapping of features. This step is crucial as it enhances the representation of the data by capturing higher-level features through the network's layers. Following the CNN, the Bidirectional Long Short-Term Memory (BI-LSTM) network works to improve feature representation by addressing the issue of overlapping features. The BI-LSTM processes data in both forward and reverse directions, ensuring that all temporal dependencies are captured, thus reducing redundancy in feature representation. These refined features are then optimized by an attention layer, which focuses on the most relevant features for the classification task by adjusting hyperparameters. The attention mechanism selectively emphasizes important features and diminishes the less important ones, which can lead to a reduction in noise within the feature set. Finally, the Random Forest classifier learns from the enhanced features. It is an ensemble method that can handle class imbalance by constructing multiple decision trees and aggregating their predictions, which generally leads to improved accuracy and robustness against overfitting. In summary, the model is designed to improve feature quality, reduce noise, and handle class imbalance, with the ultimate goal of enhancing accuracy in the classification of the dataset. In the present study, we assessed a novel technique on two widely-used benchmark datasets (UNSW-NB15 and NSL-KDD) and compared it with both baseline models and with previous research endeavours in this field. The rationale behind selecting these particular datasets was their prevalence as IDS datasets, encompassing contemporary network attacks that meet real-world attack criteria. Our hybrid approach yielded better results than most of the other approaches considered, according to our experimental findings. Our experiments confirmed that the proposed approach outperformed most other approaches available in the open literature.
+The organization of this research article is as follows: The second section provides materials and methods. It contains related work of IDS's existing algorithms and current research gaps. It describes in detail the suggested deep learning based hybrid model methodology in depth that contains (i) workflow of the proposed architecture and the overview; (ii) details of the Mean Convolutional Layer and the related algorithm, (iii) the description of Multiple Convolutional Layers, Pooling, and bidirectional-LSTM (BI-LSTM), (iv) the attention layer description and the bidirectional-attention (BI-ATT) algorithm details, (v) a description of the machine learning classifier used in the study (namely, the random forest (RF) classifier), and (vi) a criterion for evaluating the model's performance. In Section three, experimental setup, dataset employed in the present work, the experimental results and their explanations are presented. In the Section 4, discussions are given, and proposed model performance is compared with the previous research work. Finally, the present study is concluded in Section 5.
+II. Materials and methods
+A. Related work
+The present section reviews the most interesting and illustrative IDS research conducted in the last few years, especially on deep learning and machine learning. The application of deep learning technology in network intrusion detection systems (NIDS) has gained significant recognition owing to its exceptional ability to manage intricate and extensive datasets, as well as to extract the inherent features of traffic data. Consequently, such an application presents itself as
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+5 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Table 1. Related studies on IDS using deep learning.
+Ref. Aim [17] To use deep learning to improve network intrusion
+detection systems
+
+Methodology
+The technique creates worm mutants and artificial signatures for NIDS use. (a) Creating new polymorphic worm mutants (a) Creating synthetic signatures (c) The creation of synthetic data
+
+Limitation
+The mutation technique needs constant upkeeping. For similarity comparison, the Levenshtein algorithm concentrates on a global comparison of just two strings.
+
+[18] Utilizing DL and hyperparameters optimization to tackle the categorization of an IDS
+[19] Examining supervised feature selection approaches for NIDS.
+To create a novel approach to detecting network [20] intrusions depending on multiple-stage DL image
+recognition.
+
+This study proposes an alternative method for choosing DL structure-based models by automating the HPO procedure using a mixture of random and grid search methods.
+
+In the event of an unbalanced assault dataset, the algorithm needs to enhance its performance.
+
+(a) Assessing recent datasets using a customdesigned Python-based technique. (b) Giving a summary of the most well-known FS methods used in intrusion detection. (c) Evaluating different experimental approaches, including time complexity, performance, and feature correlation.
+
+The used dataset has two drawbacks: firstly, the traffic was only acquired in a tiny testbed; and second, there are only 49 characteristics, which need to be improved to evaluate the efficacy of feature selection algorithms.
+
+ResNet50: a pre-trained model used for NIDS employing multi-stage DL Image Recognition.
+
+Oversampling can compromise the integrity of the primary information. If oversampling mitigation techniques are used, the algorithm could take more time to train the model. The inability to classify something properly may occur from losing important data because of sloppy sampling.
+
+[21] The research work aims to develop an ML-based NIDS suitable for software-defined networks.
+[22] To more effectively collect spatial and temporal data using the hybrid convolutional recurrent neural network (HCRNN)-based network intrusion detection system.
+[23] To come up with an efficient way to choose and classify features for network intrusion detection on cloud computing.
+[24] To make a DL model for detecting network intrusions with uneven data.
+
+As a component of NIDS inside the SDN controller, ML techniques are employed for traffic monitoring to identify hostile behaviour inside the network. Random Forest, Decision Tree, and XGBoost are some of the classical and modern tree-based ML approaches used in this demonstration of attack detection.
+
+NIDS may have trouble catching all packets in a dynamic or expansive network. Consequently, it may miss an attack initiated during a period of heavy traffic.
+
+CRNN: A CRNN is used to build a DL-based hybrid ID configuration that forecasts and sorts malicious cyberattacks within the network. It keeps track of local features. RNN: The ID system's efficiency and precision are improved by the recurrent neural network's capacity to recollect temporal data.
+
+Only a single ID database is used to evaluate the HCRNNIDSm, a potential drawback of described strategy.
+
+Identifying and comparing the best intrusion detection features using an ensemble approach. To detect intrusions, an ensemble-based classification model uses a majority voting strategy.
+
+The KDD Cup99 dataset contains redundant records, which would hinder the performance of the assessed systems.
+
+ADASYN: Adaptive synthetic sampling to increase the size of samples from minority groups. DLNID: a framework for finding traffic problems. Bi-LSTM: to train the sequence-based feature network. Autoencoder: used to reduce the size of data sets with the aim of improving information fusion CNN: to learn more about the features.
+
+NSL-KDD dataset has less no of attacks as compared to UNSW-NB15 dataset.
+
+https://doi.org/10.1371/journal.pone.0302294.t001
+
+a viable approach towards identifying security breaches. In recent years, many methods based on deep learning have been used to solve the intrusion classification problem. Following are few recent research works done in the field of ML and DL techniques and finally we present a summarized Table 1, in which we talk briefly about the DL-based approaches that have been developed recently and are available in the open literature.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+6 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+In their research, Dutta et al. [25] present a hybrid network anomaly detection system consisting of two stages that utilize a Classical Autoencoder (CAE) and a deep neural network (DNN) for feature engineering and classification. The performance of the proposed model is evaluated on the UNSW-NB-15 dataset, resulting in an accuracy rate of 91.29%. Despite the significant advancements made to enhance NIDSs' predictive abilities, recent studies have shed light on packet sampling techniques' influence on NIDS models [26]. These investigations revealed that even minute sampling rates such as 1/100 and 1/1000 can substantially reduce Machine Learning (ML)-based NIDS systems' performance. Aljbali et al. [27] presented a technique for detecting anomalies based on a bidirectional short-term memory (Bi-LSTM) algorithm. Experimenting with the UNSWNB15 dataset demonstrated that this approach outperformed other deep learning and ML models in terms of precision, recall, F1 score, and accuracy. The authors in [28] present a DL wireless intrusion detection (WIDS) approach that utilizes a feed-forward deep neural network (FFDNN). The FFDNN-WIDS scheme is equipped with an Extra Trees wrapper-based feature extraction module to produce an optimal input subset for the classifier. This study evaluated the performance of the FFDNN on the UNSW-NB15 dataset using binary and multiclass classification problems. Results revealed that the FFDNN network achieved high test accuracies of 87.10% (2-way) and 77.16% (10-way) for the UNSW-NB15 dataset. Tang et al. [29] introduced a deep stacking network (DSN) model that integrated the outputs of multiple classifiers to enhance the accuracy of intrusion detection systems. These authors claimed that a fusion approach with four classifiers improved the classification performance, yielding an overall accuracy rate of 86.8%. To achieve the best feature selection for NSLK-KDD, the authors in ref. [15] investigated the integration of the Long Short-Term Memory (LSTM) and the Genetic Algorithm (GA) approaches. The experimental outcomes reveal that their devised approach obtained a commendable accuracy level of 93.88%. Notably, no information was provided on the detection rate in this investigation.
+B. Gaps in the previous research
+This section outlines the several research gaps identified in the literature review. Earlier studies utilized dummy datasets for investigating class imbalance, but this increased the false information and, in real conditions, increased the error in the imbalanced class. In the literature, some studies on feature selection have decreased the amount of information and increased the number of false positives. Several studies have utilized efficient feature mapping but still, they need to map the backward and forward planes of features.
+C. Proposed methodology
+This study aimed to see how well the attention-based hybrid model works with deep learning techniques, specifically MCL, convolutional neural networks, and bidirectional long shortterm memory networks, to classify network intrusions more accurately than with traditional techniques and classification using Random Forests. The NSL-KDD and UNSW-NB15 benchmark dataset served as a platform for experimentation. The workflow of the proposed architecture with hyperparameters to classify intrusions is shown in Fig 1 while the overall architecture of the hybrid MCL-FWA-BILSTM intrusion detection model is shown in Fig 2.
+D. Brief description of workflow of the proposed architecture
+The Fig 1 depicts a flowchart of a machine learning pipeline designed for classification tasks, likely in the context of an Intrusion Detection System (IDS) given the label "Input IDS dataset". The process begins with the input IDS dataset, which then undergoes preprocessing to prepare the data for feature mapping. Feature mapping appears to be handled by two neural network
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+7 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 1. A diagram showing the workflow of the proposed architecture with hyperparameters to classify intrusions.
+https://doi.org/10.1371/journal.pone.0302294.g001
+architectures: Convolutional Neural Network (CNN) and a Bidirectional Long Short-Term Memory network (BI-LSTM). The CNN is typically used for capturing spatial hierarchies in data, while BI-LSTM is adept at processing sequences and capturing long-term dependencies in either direction of a sequence. Following feature extraction, an attention layer is applied, which can help the model to focus on more relevant parts of the data for the task at hand. The attention mechanism's performance can be influenced by hyperparameters (HP1), such as the number of layers in the neural network, the number of training epochs, the choice of activation function, and the amount of dropout in recurrent connections. These hyperparameters are crucial for optimizing the performance of the model. Finally, the output of the attention layer feeds into a Random Forest classification algorithm. Random Forest is an ensemble learning
+
+Fig 2. A diagram showing the workflow of the proposed novel hybrid- MCL-FWA-BILSTM based architecture to classify intrusions. https://doi.org/10.1371/journal.pone.0302294.g002
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+8 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+method that operates by constructing a multitude of decision trees at training time and outputting the class that is the mode of the classes of the individual trees. This combination of neural networks with a traditional machine learning algorithm can leverage the strengths of both approaches to improve classification accuracy.
+
+E. Overview of the proposed architecture
+Fig 2 depicts an overview of the suggested hybrid MCL-FWA-BILSTM (Mean Convolutional Layer-Feature Weighted Attention BILSTM) classification architecture for intrusions. In Section 3, Tables 2 and 3 detail the various types of attacks on datasets and the number of characteristics associated with each class label. The methodology of this study focuses on several NIDS components, and in the following paragraphs, we present brief details of crucial steps. In the first step, a dataset is used as input. To begin with, data preprocessing is required. The data preprocessing operation was carried out one by one on both the datasets NSL-KDD and UNSW-NB15 (see details in Section 3, Table 2 and 3). The primary operations at this stage include the missing value process, one hot coding, label coding, feature transformation, feature scaling, and feature normalization. In the next step, this work has a novel CNN-MCL layer designed for feature extraction before applying it to the attention mechanism. The CNN-MCL mapping is implemented using the mean convolutional layer (MCL), which represents average convolutional processing. Additional convolutional layers (Convolutional 1 and Convolutional 2) are utilized as feature extractors. Fig 2 also depicts a pooling layer and a flattening step following the convolution phase. The feature vector is obtained once the layer is flattened. Then, in the following steps, features from the attention layer and the BI-LSTM are concatenated to produce the mapped features. In the following steps, CNN-MCL features are assigned semantic basis feature weights and self-attention-based feature weights for enhancing the expression ability of the traffic features, which are then combined as mapped features to increase the class's learning with fewer instances due to the semantic meaning learned from the integrated features and to make an efficient decision regarding the unbalanced class. Feature attention weights balance this procedure in normal classes. Finally, these mapped features are fed to random forests for classification, and the model's performance is evaluated.
+
+Table 2. Description of the NSL-KDD dataset attack categories.
+
+Dataset
+
+Normal Category
+
+Attack Category
+
+DoS Denial of Service
+
+Probe (Prob)
+
+R2L Remote to Local
+
+U2R User to Root
+
+Total Instances
+
+Normal Instances
+
+Attack instances
+
+Total Instances Per Category
+77054
+53385
+
+Description An intentional attempt to prevent access to data or services on a computer, network, or the Internet.
+
+14077 3749
+252 1,48,517 77054 71463
+
+This type of attack gathers information about how vulnerable the target system is, so that future attacks can be planned. It is possible for an unauthorized person to get access to a remote system as a regular user or as a root by sending data packets to that machine over a network.
+By pretending to be real users, attackers can take advantage of security holes to gain root access to the system.
+
+https://doi.org/10.1371/journal.pone.0302294.t002
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+9 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Table 3. Attack types and their description in the UNSW-NB15 dataset.
+
+Category Normal(Nor) Attack Category
+Attack Instances Normal Instances Total Instances
+
+Total Instances Per Category
+2218761 Fuzzers (Fuzzy) Reconnaissance
+(Reco) Shellcode (Shell) Analysis (Anal)
+Backdoors (Back) DoS
+Worms (Wrm)
+Generic (Gene)
+Exploits (Exp)
+
+Description
+
+Natural transaction data 24246 Aiming to suspend a program or network by feeding it data produced randomly. 13987 Includes all strikes that can replicate information-gathering attacks.
+
+1511 A tiny bit of code is used as the payload in software vulnerability exploitation. 2677 It includes a variety of port scans, spam, and HTML file penetrations. 2329 A method for gaining unauthorized access to a computer or its data by circumventing system security mechanisms.
+
+16353 174 215481 44525 321283
+
+A fraudulent action to render a server or network resource unavailable to users, typically by temporarily suspending or stopping the services of an Internet-connected host.
+To infect other systems, the attacker clones itself. Most of the time, it spreads through a computer network and gets into the target computer through some security holes.
+A method works against all block ciphers with a particular block and key size, regardless of how the block cipher is built.
+The attacker is aware of a security flaw inside an operating system or piece of software and uses this information to take advantage of the flaw.
+
+2218761
+
+2540044
+
+https://doi.org/10.1371/journal.pone.0302294.t003
+
+F. Mean Convolutional Layer (CNN-MCL)
+The suggested method employs CNN-based layers to completely separate anomalies from normal data. The data is used for learning the changes occurring from abnormal data. As normal and abnormal events are generally identical in characteristics, the CNN is used to detect abnormality variation. The traditional CNNs have been used to detect attacks and feature learning for flow content or matrix content, so that the classifier is connected with training data instead of learning data differences. Though, the suggested technique was to carefully evaluate the content in order to learn the anomalous traces.
+We developed a novel hybrid architecture using mean convolutional layer (MCL), which is commonly used in intrusion detection tasks [30]. The suggested layer aims to completely learn prediction error filters in order to replicate these actions. Therefore, the active prediction error fields are affiliated with the feature maps as low-level abnormal trace quantities. The CNN-MCL is responsible for being aligned in the opposite direction of the CNN intended to initiate the IDS tasks. This serves as a data storage mechanism, as prediction errors do not typically involve flow content, and it also provides the CNN low-level IDS features. The more layers a CNN has, the more capable it is of learning higher-level features. The CNN-MCL is described using the following Eq (1), in which L signifies the Lth CNN-MCL, k represents the kth convolutional filter inside a layer, and the core value of a convolutional filter is characterized as (Cx, Cy). In addition, the CNN must learn prediction error filters by enforcing significant constraints actively.
+
+FðLÞ ¼ MeanðWðLÞðCx; CyÞÞ
+
+ð1Þ
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+10 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+8
+
+<>> >>:
+
+wðkLÞðx; wðkLÞðx;
+
+yÞ yÞ
+
+¼ ¼
+
+wkðLÞ 
+
+ FðLÞ wðkLÞ
+
+;
+
+ðx;
+
+yÞ
+
+À FðLÞ; ðx; yÞ ¼
+
+¼6 ðCx; CyÞ; ðCx; CyÞ
+
+ð2Þ
+
+CNN-MCL predictions are recognized through a precise training phase. The filter weights
+
+W
+
+ðLÞ k
+
+are
+
+updated
+
+at
+
+every
+
+iteration
+
+using
+
+the
+
+Adam
+
+optimization
+
+algorithm
+
+during
+
+the
+
+follow-
+
+ing stage. By using CNN-MCL reinforcement, the updated filter weights are then integrated
+
+into the feasible set of prediction error filters, and a projection is executed on each training
+
+iteration. The central filter weight is set to a negative mean of middle values among all k filters
+
+inside the layer, and the remaining filter weights are normalized via Eq (2) above.
+
+This methodology consists of two steps. The residual weights are partitioned by the sum of
+
+all filter weights, with the exception of the central value, after being multiplied by the mean
+
+value. The medians of all k filters are arranged to a negative mean value in layer L. Algorithm 1
+
+below contains the pseudocode for this process:
+
+Algorithm 1. CNN-MCL.
+
+Input: Intrusion Dataset with features (F) and Labels
+
+Output: Efficient Weight
+
+Step 1. Initialize Random Weights (W) and Set
+
+i=1
+
+Step 2. While imaximum iteration do
+
+Do Feedforward pass
+
+Update weight by Backpropagation using Adam
+
+End While
+
+Step3: SetFilterFðLÞ ¼ meanðtanhðFÞÞ
+
+ð3Þ
+
+mean of central points of all filters of layer L Step 4. Update the weights of layers using
+
+Wi
+
+¼
+
+ðF ðLÞ W iÀ
+
+1Þ=
+
+PN
+i¼0
+
+Wi
+
+ð4Þ
+
+i¼iþ1
+
+Step 5. If Converge then exit Step 6. Return W
+Algorithm 1 gives efficient weights to features for improving the learning and its indirect impact on class imbalance. In the CNN-MCL algorithm, the iteration value depends on the training instances and the run-back propagation for reducing error. In the proposed approach shown in Fig 2, CNN-MCL filter Input Size N by 120, MCL layer N by 10 by 120, Conv1 N by 10 by 12 by 32, Conv2 5 by 5 by 16, flatten layer N by 56 after the weight is passed in the BI-ATT Algorithm 2 discussed in section J. Eq (3) in the CNN-MCL algorithm takes the mean of the values obtained by sigmoid mapping, with weights updated by Eq (4) and total weights also considered.
+Algorithm 2. BI-ATT (Bidirectional Attention). Input: Features and Weights
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+11 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Output: Efficient mapped features 1. Input features F 2. FB < À tanhðWCFt þ UCFtÀ 1 þ bcÞ 3. FB < À tanhðWCFt þ UCFtÀ 1 þ bcÞ 4. FA<-by Eq(1) 5. FAT<-by Eq (2) 6. Fe<-FBLConcatFAT 7. ReturnFe
+G. Multiple convolutional layers
+The convolutional layer [31] is the most important component of a CNN. This layer applies multiple convolutional kernels to transform the feature maps (or input images) into new, unique feature maps. The deeper the network the more the layers might have a comprehensive range of vision and can capture global information [32]. So, as the number of convolutional layers increases, the scale of the convolutional features gradually gets bigger. A series of convolutional layers is used to learn higher-level prediction error features. As shown in Fig 2, each convolutional layer will learn the new representation of feature maps that the previous convolutional layer or lower-level features learned. The method described above shows how the Rectified Linear Unit (ReLu) activation function limits the range of data values at each stage of the network.
+
+H. Pooling layer
+The CNN used a max-pooled size of 3x3 with a stride of 2. The max-pooling layer has the largest value in the sliding window's local neighbourhood. This layer tries to reduce the number of dimensions in the feature maps. The max-pooling layer lowers the cost of training and the risk of overfitting. The pooling layers keep the most representative feature and aid in subsampling and improving accuracy.
+
+I. The Bidirectional Layer (BI-LSTM Layer)
+During training, the BI-ISTM layer stores data in memory, sequentially represents long-distance correlation, and checks for correct gradient propagation. The LSTM model we use in our method is two-way, so it can be used to learn in both directions.
+As stated in references [33,34] the BI-LSTM model is an improved form of the LSTM one. In order to extract coarse-grained features, the BI-LSTM model joins the forward LSTM model with the backward LSTM one. When new information is received, the LSTM model is trained to rewrite old content when new information is received. To perform the task first, it compares the contents of the innermost memory unit (Cu) via the input unit gate (Igt), the forget unit gate (Fgt), and the output unit gate (Ogt) [35]. Information sent into an LSTM network is evaluated for usefulness in light of applicable rules, and outliers are forgotten using the mechanism of the forget gate as indicated in Fig 3.
+The hidden states of a BI-LSTM layer can be used in conjunction with an input arrangement z = z0. . .. . ...zt at time t to yield the output sequence h = h0. . .. . ...ht. The result of employing this forget unit gate can be derived as
+
+Fgt ¼ sigmoidðWzFgt zt þ WhFgt htÀ 1 þ bf Þ
+
+ð5Þ
+
+Here ht-1 is the output of the hidden layer at time t1 and zt is the input at time t2 corresponding to the forget gate (Fgt). The weights of the connections between the nodes are denoted by W, and the bias feature is denoted by b.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+12 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 3. The architecture of the BI-LSTM model.
+https://doi.org/10.1371/journal.pone.0302294.g003
+J. Attention layer
+This layer works for the attention mechanism used in the proposed work. Today, an attention mechanism is a powerful tool for identifying essential information and achieving excellent results [36,37]. The feature-based attention mechanism is adopted to fully capture the genuinely significant features of the representation of network traffic.
+The BI-LSTM is capable of utilizing information from both sides. The self-attention mechanism improves the attention mechanism, which lessens reliance on outside information and more effectively captures the internal correlation of data or features. Our model can pay more attention to the crucial features of the network intrusion dataset by using the self-attention mechanism. This mechanism can affect both the source's and the target's internal components. As a result, it can increase the learning features' efficiency during training [38]. The feature-weighted attention (FWA) technique is used to assign weight values to features. It is incorporated into classification models to aid in focusing on the most relevant features for classification and to minimize the overfitting issue. The FWA-BILSTM model concentrates on unique features that aid in identifying changes in the input data. This improves the classification performance of the FWA-BILSTM model and aids in determining the alteration in an input.
+The basic concept of the attention mechanism is to extract and signify the most significant information in the data. The attention mechanism is an automatic weight allotting scheme. In intrusion detection, the role of the attention mechanism would be to calculate the effects of each unit of network traffic, mostly due to the preceding unit of network traffic. The attention value for every unit of network traffic is determined using the following equation
+
+t
+
+¼
+
+PexpðuTt uwÞ texpðuTt uwÞ
+
+ð6Þ
+
+Where uw is indeed the weight matrix and ut is a matrix that acts as the implicit illustration of the CNN hidden state (ht) at time t.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+13 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+The BI-LSTM model's packet vectors ht are used in a nonlinear transformation to get its implicit representation t which can be written as
+
+t ¼ tanhðWwht þ bwÞ
+
+ð7Þ
+
+In this case, Ww denotes the weight matrix and bw denotes the bias. After the determination of the attention probability distribution value for every instant, the following formula is used
+
+to calculate the feature vector v containing the network traffic information:
+
+X
+
+ ¼ t:tht
+
+ð8Þ
+
+Finally, we can use the following function Y to obtain the predicted label y:
+
+Y ¼ Sof tmaxðWw þ bÞ
+
+ð9Þ
+
+In Algorithm 2, we showed the non-linear mapping of features by the BI-LSTM RNN. This mapping improved class imbalance of IDs attacks, while the attention mechanism increased the reliability of features and the selection of an efficient mapping.
+In Algorithm 2, F represents features and FB and FBL are weighted forward features and a combination of forwarded and backward feature mappings.
+In FB < À tanhðWCFt þ UCFtÀ 1 þ bcÞ, the Sigmoid Layer uses efficient weights that are obtained through the CNN-MCL approach.
+The symbol WcFt denotes the initial weights obtained by the MCL layers and the CNN, and the symbol UcFt-1 denotes the previous layer non-linear mapping, while b represents the initial bias features.
+In Algorithm 3, the proposed approach, which is called feature weighting by CNN-MCL starts with inputting weights Input to the BI-ATT algorithm, and, after feature mapping, it applies features or learning through the Random Forest algorithm by the bagging approach. After the learning phase, Algorithm 3 makes a classification model and analyzes performance metrics like accuracy, precision, recall, and F-score. Algorithm 3. Proposed Approach (Attention-Feature Weighting). Input: Dataset {features(F), Labels(X)} Output: Classified Intrusion 1. Input Dataset and features 2. Wc<-CNN-MCL(F) 3. Fe<-BI-ATT(Wc,F) 4. C<-RandomForest(Fe,X) 5. AnalysisMetrics<-C(test)
+
+K. Random Forest (RF)
+The RF algorithm can be described as an ensemble of classification trees that use the results of the decision tree (DT) model to make predictions. Each tree has one vote for the most frequent class in the input data. The trees are trained to grow together into a forest using a method called bagging or bootstrapping aggregation [39]. In the RF algorithm, the best predictor for each node is chosen randomly at the node level. By bagging on bootstrap sets of training data, it would be possible to make a lot of decision trees. The average or mean output value from the different decision trees (DTs) are used to make the final prediction of the RF algorithm. We used the RF algorithm to look at the behaviour of the intrusion from a different point of view because the RF algorithm builds multiple decision trees and combines them to make a more accurate and stable prediction. Several studies [40­42] have shown that the RF algorithm is better than other traditional classifiers at spotting strange traffic.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+14 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+The loss function is generated in terms of the following objective function F:
+
+F
+
+¼
+
+Xn
+x¼1
+
+À l
+
+Ax;
+
+A^ x
+
+þ
+
+ðT
+
+À
+
+ð1 À
+
+
+
+ÞT
+
+Þ
+
+þ
+
+1 2
+
+
+
+XT
+y¼1
+
+w2y
+
+ð10Þ
+
+where,
+
+n
+
+denotes
+
+the
+
+given
+
+features
+
+with
+
+label
+
+instances
+
+and
+
+Pn
+x¼1
+
+lðAx
+
+;
+
+A^ x
+
+Þ
+
+denotes
+
+the
+
+train-
+
+ing loss function, which fits the data into the L norm of the leaf node by the following equa-
+
+tion:
+
+L ¼ ðT À
+
+ð1 À
+
+ÞTÞ
+
+þ
+
+1 2
+
+
+
+Xt
+y¼1
+
+w2y
+
+ð11Þ
+
+All trees are assembled chronologically by using an additive learning process. Each newly added tree learns from its former tree and updates the prediction result by updating A^ kÀ 1 at the kth iteration. In this way, the input data are classified into two types: (a) normal data and (b) malicious or anomalous data.
+
+L. Utilized metrics
+
+Here, we use the most common metrics to measure how well the classifier model finds intrusions: precision, recall, false positive rate (FPR), false alarm rate (FAR), and F-score. The recall is also known as the Detection Rate (DR) in the intrusion detection problem. The detection rate (True Positive Fraction) generally represents the percentage of correctly classified malicious traffic. Similarly, the false positive rate (False Positive Fraction) shows the proportion of wrongly classified malicious traffic. Detection accuracy (DA) measures the system's overall performance and demonstrates how well it can tell the difference between malicious and legitimate network traffic. In addition, the false alarm rate is the proportion of misclassified malicious and legitimate network traffic. The F-score is mainly utilized as a combination of Precision and Recall, which equals the Harmonic Mean of these two measures.
+The Harmonic Mean is preferred to the Arithmetic Mean since the former punishes extreme values more severely. The F-score is used to evaluate the performance of every class of traffic. The performance of the proposed MCL-SA-BILSTM intrusion detection system is validated in terms of DR, Precision, FPR, and the F1-score. The definitions of these metrics are presented below:
+
+Recall or Detection Rate DR ¼ TP=ðTP þ FNÞ
+
+ð12Þ
+
+Precision PR ¼ TP=ðTP þ FPÞ
+
+ð13Þ
+
+False positive rate FPR ¼ FP=ðTN þ FPÞ
+
+ð14Þ
+
+False Alarm Rate (FAR)--The false alarm rate represents the percentage of the normal and anomaly behaviours that are incorrectly classified.
+
+FAR ¼ FP þ FN=2ðTN þ FPÞ
+
+ð15Þ
+
+Detection Accuracy DA ¼ TP þ TN=ðTP þ TN þ FN þ FPÞ
+
+ð16Þ
+
+FÀ score F ¼ 2DRPR=ðDR þ PRÞ
+
+ð17Þ
+
+The number of False Positives (FP) is the proportion of normal activities that are wrongly classified as an anomaly. The number of False Negatives (FN) is the proportion of anomalous behaviors that are incorrectly labelled as normal, whereas the number of True Negatives (TN)
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+15 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 4. Confusion matrix related to IDS for performance evaluation.
+https://doi.org/10.1371/journal.pone.0302294.g004
+represents the proportion of normal behaviors that are accurately labelled as normal. Furthermore, the number of True Positives (TP) represents the proportion of anomalous behaviors that are accurately identified as an anomaly. The TP, TN, FP and FN are visualized in Fig 4.
+The proposed approach consists of three main components. The first component is BILSTM, which is responsible for learning the sequence of features. Its length is set to 4 because LSTM units require four steps for error detection and correction, ensuring a fast learning rate by providing a value of 0.02. In our suggested approach, we set a hyperparameter Adam optimizer in the second stage, which involves hybridizing an attention layer and a mean CNN. The mean CNN consists of four layers with TANH and SoftMax activation functions. We next utilize a random forest algorithm, which employs boosting and bagging techniques, to tune the hyperparameters. The number of decision trees in the ensemble is determined through this process.
+III. Experimental setup
+A computer with an Intel(R) Core(TM) i7-10875H processor running at 2.30 GHz, 32 GB of RAM, and an NVIDIA GeForce RTX 2070 GPU is used to carry out the experiments. The PC has a 64 bit MS Windows 11 operating system. Moreover, the proposed FWA-MCL-BILSTM model is implemented using Jupyter Notebook from Anaconda distribution, which is an open source. In addition, different libraries are used to implement the proposed system model. For example we have used several pandas libraries for the data analysis and manipulation of the data columns in the dataset. The pd.readcsv() function is used for reading the dataset. Using dataframe as df.isna.sum() and df.column.valuecounts() we analyzed the columns of the dataset. The df.info is used for datatype checking and df.describe() to get the statistical reports. In order to get the attack label train_data['label'].value_counts() is used and for the distribution of attack classes train_data.label.value_counts() is used. We used pickle library to load and save the trained model. Further, the Numpy library is employed for converting the Pandas dataframe into multidimensional array objects to aid in performing calculations in faster mode. In order to normalize data, we used sklearn library StandardScaler(), and for multiclass label encoding we used LabelEncoder(), also for transformation we used LabelBinarizer from sklearn. In addition, this paper utilized TensorFlow, keras and pytorch library to implement out hybrid approach, such as the FWA,BILSTM, and CNN and MCL. Moreover, we have also
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+16 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+used several built-in functions as well as user-defined functions in order to get enhanced performance. The experiments are carried out in two phases using the NSL-KDD dataset and the UNSW-NB15 dataset, as discussed in section III, and listed in Tables 2 and 3, respectively. The NSL-KDD dataset is used for the simulations in the first phase and the UNSW-NB15 dataset for the simulations in the second phase. The experiments conducted included both the binary and the multiclass classification tasks for both benchmark datasets.
+1. Dataset
+We assessed the suggested framework of the present study using two datasets, namely NSL-KDD and UNSW-NB15.
+A. The NSL-KDD dataset. This research work employed the NSL-KDD dataset, which is available at http://www.unb.ca/research/iscx/dataset/iscx-NSL-KDD-dataset (accessed on November 25, 2023). This updated version of the KDD99 dataset mitigates issues concerning redundant data found in KDD99 and is widely utilized as a benchmark for IDS performance evaluation. The NSL-KDD includes training and test samples, encompassing 148517 traffic samples. The NSL-KDD dataset has 42 features, including nine basic Transmission Control Protocol (TCP) connection features, thirteen TCP connection content features, nine features based on the timing of network traffic, ten features based on the hosts involved in that traffic, and one label feature. These 42 features consist of one normal feature, 34 continuous features, four binary features, and three nominal features. The attacks considered can be divided into four groups based on their goals. These attacks include denial of service, probing, user-to-root, and attacker-to-intruder (R2L).
+Additionally, binary classification involves two categories: normal and anomaly, while multiclassification divides classification labels into five categories--normal, dos, R2L, U2R, and probe--based on their specific features, among other dimensions. The attack categories are mentioned in Table 2.
+B. UNSW-NB15 DATASET. This study used the UNSW-NB15 dataset, which is available at: https://research.unsw.edu.au/projects/unsw-nb15-dataset (as of October 20, 2023). The UNSW-NB15 dataset is an innovative dataset that was published in 2015. It contains modern nine attack types. It includes class labels for a total of 25,40,044 records. This dataset contains 49 features, including the class label and a wide range of normal and attacking activities. In total, there are 22,18,761 normal records, and 3,21,283 attacked records. The UNSW-NB15 dataset contains six distinct categories of features: flow features, basic features, content features, time features, labelled features, and additional generated features. The features between 36 and 40 are called general-purpose features, while features 41 to 47 are called connection features. The UNSW-NB15 dataset contains nine distinct attack categories: analysis, denial-ofservice exploits, generics, reconnaissance, worms, and shellcode. Table 3 summarizes the attack types related to the UNSW-NB15 dataset including DoS, fuzzers, exploits, worms, shellcode, reconnaissance, generic analysis, and backdoors. Normal activities were assigned a value of zero, while the remaining nine attack types received a score of one. The former applies when no network intrusion occurs. By contrast, the latter describes situations where an Internet-based application is breached via port bypassing or unauthorized access to resources targeting security vulnerabilities.
+2. Experimental results
+In this section, we are going to analyze the performance of our MCL-FWA-BILSTM model in classifying network intrusion for the NSL-KDD and UNSW-NB15 datasets. Our assessment of the model outcome covers binary and multi-classification scenarios.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+17 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Table 4. Confusion matrix of NSL-KDD on the proposed approach.
+
+Classes DOS Normal Prob R2L U2R
+
+DOS
+
+Normal
+
+Prob
+
+R2L
+
+U2R
+
+53360
+
+8
+
+8
+
+0
+
+0
+
+30
+
+76952
+
+3
+
+49
+
+4
+
+5
+
+41
+
+14000
+
+0
+
+0
+
+2
+
+228
+
+2
+
+3610
+
+4
+
+0
+
+8
+
+1
+
+16
+
+186
+
+https://doi.org/10.1371/journal.pone.0302294.t004
+
+A. Multiclass experimental results for NSLKDD. We tested the suggested approach on the NSL-KDD dataset to prove its efficacy. Table 4 lists the confusion matrix for all attack classes in the NSL-KDD dataset while Table 5 shows additional evaluations, FPR, DR, F-score Precision and accuracy. With relative values of 76952, 53360, and 14000, the classes Normal, DoS, and Prob were identified with extreme precision. By contrast, the R2L (3610) and U2R (186) classes exhibited significantly less precision than the other classes.
+The proposed model's performance details and the performance of a multi-class classification against various types of attacks are presented in Table 5 and visualised in Fig 5. For each of the four attack categories, the precision, DR, and F-score metrics are separately computed. For DoS attacks, the suggested model showed excellent performance in terms of precision, detection rate, and F-score, with a performance metric of almost 1.0 for all, whereas for probe and normal attacks, the suggested scheme accomplished a performance metric approximately equivalent to 1.0, with a difference of roughly 0.2. For R2L, the model achieved a performance metric in terms of precision that amounted to 93.86%. Other metrics obtained are 98.23% for the detection rate and 96% for the F-score. On the other hand, for U2R, the precision, DR, and F-score obtained are 88.15%, 95.88%, and 91.85% respectively. Further, the proposed model obtained an overall accuracy of 99.88% for the multiclass classification.
+B. Binary classification results of NSL-KDD. The normal category has the value 0 and the remaining four categories (Dos, R2L, U2R, and Probe) are assigned the value 1. The assigned values are Normal = 0 and Attack = 1.
+The proposed model's performance for binary classification is represented in Fig 6. The MCL-FWA-BILSTM model accuracy and detection rate are observed as 99.67% and 99.28, respectively for NSL-KDD dataset.
+C. Multiclass experimental results for UNSW-NB15. In order to illustrate the proposed method's efficacy, we also conducted the experiment on the UNSW-NB15 dataset. The confusion matrix for the suggested technique on UNSW-NB15 is shown in Table 6, and additional evaluations are included in Table 7. The precision, detection rate (DR), and F-score values are highest for the normal and generic classes, exceeding 98% in nearly all instances. By contrast, the Back and Worms classes have the lowest precision values, owing to their relatively low number of examples. Consequently, the imbalance in the UNSW-NB15 dataset could have
+
+Table 5. Performance metrics of NSL-KDD dataset using MCL-FWA-BILSTM model.
+
+Classes
+
+FPR
+
+DR
+
+F-score
+
+DoS
+
+0.02
+
+99.93
+
+99.95
+
+Normal
+
+0.12
+
+99.63
+
+99.76
+
+Probe
+
+0.03
+
+99.9
+
+99.79
+
+R2L
+
+0.16
+
+98.23
+
+96
+
+U2R
+
+0.02
+
+95.88
+
+91.85
+
+https://doi.org/10.1371/journal.pone.0302294.t005
+
+Precision 99.97 99.89 99.67 93.86 88.15
+
+Accuracy 99.88
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+18 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 5. MCL-FWA-BILSTM model precision, DR, F-Score and FPR comparison on NSL-KDD dataset.
+https://doi.org/10.1371/journal.pone.0302294.g005
+been considered one of the possible explanations for the performance disparity between different classes.
+The MCL-FWA-BILSTM model's performance details, as well as the performance of the multi-class classification against various types of attacks, are shown in Table 7. The Precision, DR, and F-score are computed separately for each of the nine attack categories in addition to the normal class. The proposed MCL-FWA-BILSTM model achieved performance metric values close to 1.0 for all Exp, Reco, and Fuzzy attacks, with a difference of about 0.3. The proposed MCL-FWA-BILSTM model performed exceptionally well regarding the precision, DR, and F-score metrics for the Normal and Generic classes, with all values approaching 1.0. The precision for Back, DoS, Shell, and Worm is between 0.6 and 0.8, while DR is between 0.8 and 1.0, and the F-score is between 0.7 and 0.9.The Fig 7 represents the visualization of performance metrics of all the nine attack classes. The Fig 8, represents the accuracy of the binary
+
+Fig 6. Binary classification accuracy and DR comparison on NSL-KDD. https://doi.org/10.1371/journal.pone.0302294.g006
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+19 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Table 6. Confusion matrix of UNSW-NB-15 dataset using MCL-FWA-BILSTM approach.
+
+Classes
+
+Nor
+
+Fuzzy
+
+Anal.
+
+Back.
+
+DoS
+
+Gene
+
+Nor
+
+94564
+
+767
+
+8
+
+0
+
+13
+
+16
+
+Fuzzy
+
+495
+
+20927
+
+5
+
+2
+
+118
+
+32
+
+Anal.
+
+27
+
+121
+
+530
+
+1
+
+3
+
+0
+
+Back.
+
+9
+
+49
+
+0
+
+422
+
+49
+
+2
+
+Dos
+
+81
+
+357
+
+5
+
+2
+
+9039
+
+42
+
+Gene
+
+42
+
+70
+
+0
+
+2
+
+87
+
+57798
+
+Exp
+
+8
+
+1219
+
+1
+
+7
+
+900
+
+9
+
+Reco
+
+90
+
+49
+
+1
+
+4
+
+120
+
+4
+
+Shell
+
+34
+
+158
+
+0
+
+3
+
+14
+
+36
+
+Worms
+
+4
+
+7
+
+0
+
+0
+
+7
+
+4
+
+https://doi.org/10.1371/journal.pone.0302294.t006
+
+Exp. 68 42 17 88 1200 29 56779 93 22 18
+
+Reco. 7 45 1 19 21 4 91
+11470 11 0
+
+Shell. 75 15 0 15 33 30 59 31 1102 1
+
+Worms. 2 1 0 1 2 4 4 0 1 66
+
+classification and the Fig 9 represents the comparison of the binary and multiclass classification results.
+
+IV. Discussion
+In this section, we discuss our achievements, and comparison with previous work. The Figs 10­18 and Tables 8­13 show the whole results of our investigation. Hence, we will carefully analyze each of them separately and comprehensively.
+
+A. Comparison of MCL-FWA-BILSTM model with the state of the art for Binary Classification
+To objectively evaluate the accuracy and differentiation of the MCL-FWA-BILSTM model, we compared our model with some recent related works presented by several other researchers, shown in Table 8 and Fig 10, available in open sources. Experimental results confirmed that the proposed approach outperforms most other methods concerning binary classification accuracy. The results showed that the proposed model (99.67%) performed better than other existing techniques in the NSL-KDD datasets. For the UNSW-NB15 dataset, the MCL-FWABILSTM model performed optimally (99.56%) in comparison with the existing methods, as shown in Fig 10. The experimental results showed that the performance of MCL-FWABILSTM model is superior to that of models based on traditional machine learning methods and other deep learning methods in binary-class classification using the same datasets, NSL-KDD and UNSW-NB15, for network traffic classification. Further, some researchers validated their work using the NSL-KDD benchmark dataset. While few researchers validated their work using the UNSW-NB15 benchmark dataset only. The comparison of all those model results with the proposed hybrid model MCL-FWA-BILSTM visualization is shown in Table 9. It is evident that the proposed model outperformed almost all the previous models.
+
+Table 7. Performance Metrics of the UNSW-NB15 dataset on the proposed approach.
+
+Classes Precision
+DR FPR F-score Acc.
+
+Nor 99 99.17 0.58 99.09
+
+Fuzzy 96.5 88.21 0.32 92.17
+
+Anal. 96.5 97.79 0.07 85.35
+
+Back. 64.35 95.26 0.09 76.94
+
+Dos
+
+Gene
+
+83.33
+
+99.54
+
+87.33
+
+99.75
+
+0.7
+
+0.13
+
+85.55
+
+99.64
+
+99.45
+
+https://doi.org/10.1371/journal.pone.0302294.t007
+
+Exp 96.11 97.3 1.14 96.7
+
+Reco 96.11 98.29 0.16 97.49
+
+Shell 79.88 80.97 0.11 80.38
+
+Worms 61.68 81.48 0.02 70.21
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+20 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 7. MCL-FWA-BILSTM model precision, DR, F-Score and FPR comparison on UNSW-NB15.
+https://doi.org/10.1371/journal.pone.0302294.g007
+B. Comparison with the state of the art for multiclass classification
+To assess the accuracy and differentiation of MCL-FWA-BILSTM model, we conducted a comparative analysis with various related works from open-source materials. The experimental findings validate that our approach surpasses most other methods in terms of multiclass classification accuracy for both datasets examined. In particular, MCL-FWA-BILSTM model achieved excellent results (99.88%) on the NSL-KDD dataset compared to other methods, while it did the best (99.45%) on the UNSW-NB15 dataset compared to other methods as shown in Table 10. Previous researchers in this field used the NSL-KDD and UNSW-NB15 datasets to identify network traffic. The obtained results demonstrated that the
+
+Fig 8. Comparison of accuracy and DR on UNSW-NB15. https://doi.org/10.1371/journal.pone.0302294.g008
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+21 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 9. MCL-FWA-BILSTM binary and multiclass accuracy comparison. https://doi.org/10.1371/journal.pone.0302294.g009
+MCL-FWA-BILSTM model outperformed traditional machine learning models and other deep learning techniques for multi-class classification using these datasets. Fig 11 depicted the results of comparing accuracy across various studies conducted on the NSL-KDD and UNSW-NB15 datasets. Some researchers validated their work using the NSL-KDD benchmark dataset, while others used only UNSW-NB15, the comparison of MCL-FWA-BILSTM model and others shown in Table 11.
+
+Fig 10. Comparison of accuracy of MCL-FWA-BILSTM model with existing models for binary classification on UNSW-NB15 and NSL-KDD.
+https://doi.org/10.1371/journal.pone.0302294.g010
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+22 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 11. MCL-FWA-BILSTM accuracy comparison with existing approaches for multiclass classification.
+https://doi.org/10.1371/journal.pone.0302294.g011
+C. DR and FPR comparison for multiclass classification on UNSW-NB15
+Fig 12 illustrates the performance of the proposed method on the UNSW-NB15 dataset with respect to the detection rate and FPR. The model obtained an excellent detection rate for Gene, with an FPR of 0.13. Worms have the lowest FPR value, but their detection rate is very low in comparison to most other attacks. As discussed in the above section only a high DR value does not ensure the effectiveness of the model unless its FPR is low. It is evident from the results, as shown in the Fig 12, that the MCL-FWA-BILSTM model achieved the lowest FPR and the highest DR in most of the cases, which confirms the model's efficiency. The detection rate of each of the ten classes is plotted against the FPR in Fig 12. The highest DR is 99.75% for the generic class, and the lowest DR obtained is 80.97% for the shell category. While the model obtained FPR with a maximum value of 1.14% for exploits and a minimum value of 0.02% for worms. The result obtained by the model MCL-FWA-BILSTM showed that it can classify Nor, Back, DoS, Exp, Shell, Gene, Reco, and Wrm very accurately. The performance of the MCL-FWA-BILSTM model is comparatively better than any state-of-the-art model, as shown in Table 12. The MCL-FWA-BILSTM model achieved best performance in multiclass classification, with an accuracy of 99.45%.
+D. F-score, DR and FPR comparison for multiclass classification on UNSW-NB15using MCL-FWA-BILSTM approach
+The F-score for multiclass UNSW-NB15 dataset showed excellent performance above 90% for Normal, Fuzzy, Exploits, Generic, and Reconnaissance as shown in Fig 13. While for analysis,
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+23 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 12. Comparison of DR and FPR of UNSW-NB15. https://doi.org/10.1371/journal.pone.0302294.g012
+
+Fig 13. F-Score, DR and FPR comparison for multiclass classification on UNSW-NB15. https://doi.org/10.1371/journal.pone.0302294.g013
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+24 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 14. Minority attack class detection rate of UNSW-NB15 using MCL-FWA-BILSTM model. https://doi.org/10.1371/journal.pone.0302294.g014
+Dos and shellcode the achieved F-score values found above 80%. On the other hand, for the backdoor and worms, the F-score value found below the 80% but the DR value of Backdoor found 95.26% and also the FPR was small as 0.09. Further it is observed from the Fig 13, worms attained the DR value as 81.48% and the FPR as 0.02. So, we can conclude that even for
+
+Fig 15. Comparison of DR and FPR of NSL- KDD dataset using MCL-FWA-BILSTM model. https://doi.org/10.1371/journal.pone.0302294.g015
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+25 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 16. F-score, DR and FPR comparison for multiclass on NSL-KDD using MCL-FWA-BILSTM. https://doi.org/10.1371/journal.pone.0302294.g016
+
+Fig 17. Minority attack class detection rate of NSL-KDD dataset using MCL-FWA-BILSTM model. https://doi.org/10.1371/journal.pone.0302294.g017
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+26 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Fig 18. Accuracy measures for MCL, FWA-BILSTM and proposed MCL-FWA-BILSTM. https://doi.org/10.1371/journal.pone.0302294.g018
+
+all the 10 classes, MCL-FWA-BILSTM model showed excellent performance concerning the F-score, DR and FPR.
+
+E. Minority class detection from UNSW-NB15
+In UNSW-NB15 dataset, the worms, shellcode, analysis and the backdoor belong to minority traffic. The worms attacks account for 0.07%, shellcode 0.59%, backdoor 0.9%, and the analysis attacks account for 1.05%. Nonetheless, by means of our suggested approach, MCL-FWABILSTM, this model managed to identify such attacks with a considerably elevated level of detection rate as shown in Fig 14. It is evident from Fig 14, in relation to analysis attacks, the model attained a highest detection rate of 97.79%, and for the shellcode, the least value of DR was found 80.97%. Moreover, the total accuracy score amounted to an impressive 99.45%. This indicates that the model effectively improved the imbalance issue and the model's performance.
+
+F. Comparison of MCL-FWA-BILSTM approach with the state of art considering DR and FPR and Accuracy using UNSW-NB15
+It is evident from the comparison as shown in Table 12A and 12B the MCL-FWA-BILSTM model performed exceptionally well on all metrics, including DR, FPR, and accuracy. Further,
+
+Table 8. Accuracy comparison with existing approaches for Binary Classification with state of art on UNSW-NB15 and NSL-KDD.
+
+Methods
+Resnet [1] GoogLeNet [1]
+RNN [12] MCA-LSTM [43] SAE-DNN [44]
+LSTM [45] Proposed MCL-FWA-BILSTM
+
+NSL-KDD 79.14 77.04 83.28 80.52 87.74 88.13 99.67
+
+Binary Classification
+
+UNSW-NB15 81.57 81.84 68.55 88.11 82.97 85.08 99.56
+
+https://doi.org/10.1371/journal.pone.0302294.t008
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+27 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Table 9. Accuracy comparison with existing approaches for binary classification with state of art on UNSW-NB15 and NSL-KDD.
+
+Methods DLNID [24] SAE-SVM [46] CNN-LSTM [46] MCL-FWA-BILSTM[Proposed] FFDN [28] Smote + GMM [47] Chameleon [48] MCL-FWA-BILSTM[Proposed]
+
+NSL-KDD 90.73 84.96 74.77 99.67 NA NA NA NA
+
+UNSW-NB15 NA NA NA NA 87.1 96.54 89.52 99.56
+
+https://doi.org/10.1371/journal.pone.0302294.t009
+
+Table 10. MCL-FWA-BILSTM accuracy comparison with existing approaches for multiclass classification with state of art on UNSW-NB15 and NSL-KDD.
+
+Methods RNN [12] MCA-LSTM [43] SAE-DNN [44] Chameleon [48] CNN [49] MDPC-DBN [50] MA-AE [51] LSTM [45] Proposed MCL-FWA-BILSTM
+
+NSL-KDD 81.29 82.15 82.14 90.71 79.48 82.08 89.51 85.93 99.88
+
+Multiclass Classification
+
+UNSW-NB15 64.67 77.74 77.57 89.52 60.71 66.18 85.3 73.01 99.45
+
+https://doi.org/10.1371/journal.pone.0302294.t010
+
+Table 11. MCL-FWA-BILSTM accuracy comparison with existing approaches for multiclass classification with state of art on UNSW-NB15 or NSL-KDD.
+
+Prior Research Work Autoencoder [2] DLNID [24] SAE-SVM [52] CNN-LSTM [46] DNN [53] Sem-LSTM [54] LSTM [55] LSTM [56]
+CNN+BILSTM [57] DLHA [58] Proposed
+MCL-FWA-BILSTM FFDNN [28]
+SMOTE + GMM[47] CSCADE-ANN[59] ICVAE-DNN[60]
+ANN-MLP [61] CNN [62] J48[63] Proposed
+MCL-FWA-BILSTM
+
+NSL-KDD 84.24 90.73 80.48 68.78 75.75 82.21 82.78 82 83.58 87.55 99.88
+NA NA NA NA NA NA NA NA
+
+UNSW-NB15 NA NA NA NA NA NA NA NA NA NA NA
+77.16 95.54 95.98 89.08 76.96 93.5 87.65 99.45
+
+https://doi.org/10.1371/journal.pone.0302294.t011
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+28 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+
+Table 12. a. MCL-FWA-BILSTM comparison with the state of art on UNSW-NB15. b. MCL-FWA-BILSTM model DR and FPR achievement.
+
+Model DR FPR Acc.
+
+Adaboost [64] 91.13 22.11 73.19
+
+LSTM [65] 92.06 4.22 92.33
+
+HAST-IDS [66] 93.65 9.6 80.03
+
+SVM [67] 83.71 7.73 74.8
+
+MCL-FWA-BILSTM Table 12B Table 12B 99.45
+
+Category
+
+Nor
+
+Fuzzy
+
+Anal.
+
+Back.
+
+Dos
+
+Gene
+
+Exp
+
+Reco
+
+Shell
+
+Worms
+
+DR
+
+99.17
+
+88.21
+
+97.79
+
+95.26
+
+87.33
+
+99.75
+
+97.3
+
+98.29
+
+80.97
+
+81.48
+
+FPR
+
+0.58
+
+0.32
+
+0.07
+
+0.09
+
+0.7
+
+0.13
+
+1.14
+
+0.16
+
+0.11
+
+0.02
+
+https://doi.org/10.1371/journal.pone.0302294.t012
+
+Table 13. MCL-FWA-BILSTM comparison with the state of art on NSl-KDD.
+
+Attack Type
+
+RNN [12]
+
+CNN [49]
+
+DoS R2L U2R Probe
+
+DR
+
+FPR
+
+DR
+
+FPR
+
+83.5
+
+2.1
+
+83.2
+
+2.4
+
+24.7
+
+0.8
+
+21.7
+
+0.7
+
+11.6
+
+0.1
+
+13
+
+0.1
+
+83.4
+
+2.2
+
+81.9
+
+2.1
+
+https://doi.org/10.1371/journal.pone.0302294.t013
+
+FSL [68]
+
+DR
+
+FPR
+
+94.1
+
+1.18
+
+75.9
+
+0.99
+
+81.5
+
+0.3
+
+92.7
+
+1.48
+
+MCL-FWABILSTM
+
+DR
+
+FPR
+
+99.9
+
+0.02
+
+98.2
+
+0.03
+
+95.9
+
+0.16
+
+99.9
+
+0.02
+
+it is more obvious from the results each category (DR and FPR) shown in Table 12B outperformed all other models. This makes the proposed model preferred for usage in intrusion detection systems.
+
+G. DR and FPR comparison for NSL-KDD
+Fig 15 illustrates the performance of the proposed model on the NSL-KDD dataset with respect to the detection rate and FPR. The model obtained the highest detection rate for DOS and the lowest value for FPR. It is observed experimentally that a model is considered effective if its detection rate(DR) is high and its FPR is low. It is evident from the results, as shown in Fig 15, that the proposed model achieved the lowest FPR, which confirms the model's robustness and efficiency. On the other hand, the model performance is lowest in terms of DR for the U2R, and the FPR value is comparatively large for the U2R, among others. Examining the plot of class DR and FPR in Fig 15, the best detection rate (DR) is 99.93% for DoS, and the best false positive rate is 0.02% for DoS and U2R. The least DR is 95.88 for U2R, and the highest FPR value is 0.16 for R2L. It is very clear that the model is able to classify all the classes very accurately.
+
+H. F-score, DR and FPR comparison for multiclass classification on NSL-KDD using MCL-FWA-BILSTM approach
+It is evident from the Fig 16, the F-score for multiclass using NSL-KDD dataset, showed excellent performance above 90% for all five classes in terms of F-score as well as DR. Further, FPR
+
+Table 14. MCL-FWA-BILSTM and other existing approaches for multiclass classification in both datasets.
+
+Variable NSLKDD UNSWNB15
+
+Approaches 9 9
+
+Mean Std. err. 85.90778 2.163042 77.12778 4.217612
+
+[95% conf. interval] 80.91979 90.89576 67.40195 86.85361
+
+https://doi.org/10.1371/journal.pone.0302294.t014
+
+[99.9% conf. interval] 75.00322 96.81233 55.86551 98.39005
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+29 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+value also considerably low for all the five classes. So, we can say the MCL-FWA-BILSTM model achieved excellent classification performance concerning the F-score, DR and FPR related to all attack class of NSL-KDD.
+I. Minority class detection from NSL-KDD
+In NSL-KDD, the minority traffic is the R2L and U2R attacks. The R2L attacks account for 0.08%, while the U2R attacks account for 2.61%. Nonetheless, by means of our suggested approach, MCL-FWA-BILSTM, we managed to identify such attacks with a considerably elevated level of detection rate as shown in Fig 17. For example, in relation to R2L attacks, we attained a detection rate of 98%, and for the U2R attempts, this rate was as high as 96%. Moreover, the total accuracy score amounted to an impressive 99.88%. This indicates that the model effectively improved the imbalance issue and the model's performance.
+J. Comparison of MCL-FWA-BILSTM approach with the state of art considering DR and FPR results on NSL-KDD
+We compared the indicators of our method with others state of art models in Table 13. The proposed MCL-FWA-BILSTM method outperformed all other deep learning-based models in terms of DR and also in terms of FPR. Based on the evaluation, results obtained from NSL-KDD dataset, the MCL-FWA-BILSTM model outperformed other approach in nearly all aspects. Specifically, when examining the two categories with adequate samples, we observed that our method's detection rate surpasses 95%, while other techniques typically exhibit rates below 85%. Regarding the FPR metric, we note that this metric also outperformed all other models except the FPRs of U2R, which are slightly inferior to U2R RNN [12].
+K. Comparison of MCL-FWA-BILSTM approach with the existing MCL and FWA-BILSTM model
+In the Fig 18, bar chart illustrates a comparative analysis of three different models' performance on multiclass classification tasks across two datasets, NSL-KDD and UNSW-NB15. The vertical axis represents classification accuracy percentages, while the horizontal axis identifies the models: MCL [69], FWA-BILSTM [70], and proposed MCL-FWA-BILSTM method. For the NSL-KDD dataset, MCL [69] shows lower performance, while the proposed MCL-FWABILSTM method achieves the highest accuracy, closely followed by FWA-BILSTM. In contrast, for the UNSW-NB15 dataset, the proposed MCL-FWA-BILSTM method still leads with the highest accuracy, but it shows a significant improvement over its performance on NSL-KDD, surpassing FWA-BILSTM. This visual representation emphasizes the superiority of the proposed MCL-FWA-BILSTM method in multiclass classification accuracy for both datasets.
+Based on the outcomes, it is evident that the MCL-FWA-BILSTM hybrid deep learning model outperformed other existing techniques owing to its superior performance. In fact, it utilized the novel hybrid mechanism to enhance the classification performance. When utilizing the UNSW-NB15 dataset, the proposed model achieved the highest accuracies of 99.56% and 99.45% in the cases of binary and multiclass classification, respectively. Also, for the NSL-KDD, the achieved accuracies for binary and multiclass are 99.67% and 99.88%, respectively. Further, this model showed enhanced DR and FPR values in comparison to other deep learning machine learning methods as shown in Tables 12 and 13.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+30 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+L. Reason for the improved results
+In intrusion detection, primary challenge data or situations of class imbalance are detected, and in real-time, new attacks that have not been detected previously are detected; how can this be resolved? Although the results indicate improvement, the reason for this improvement is discussed in this section. The proposed approach involves the transmission of features via two networks. The first is the attention mechanism. Layers of attention refine the features based on their relative weight. The second section uses BI-LSTM to decide how to use learning features and how much weight to give them based on semantic relationships. In both processes, the proposed approach obtains the most efficient weight of components and aids in parameter learning. During training, learning parameters determines whether a feature is significant and should receive domain or class weights. If so, the learning phase using ensemble learning improves. So far, this section has talked about why learning gets better. Now we will discuss the impact of our new algorithm on challenges. First, we deal with the class imbalance; our algorithm enhances learning in the presence of class imbalance due to the semantic weight of its features. If we have some instances, it is capable of detecting additional instances. The second challenge in real-time is that if a new sample arrives, the attention mechanism must be capable of performing a weighted attack rather than an attack on the class. So, it will be easy for the mechanism to figure out its binary type.
+M. Statistical analysis
+Table 14, based on nine approaches or measurements presents descriptive statistics for two datasets­NSLKDD and UNSWNB15. Both of these mean figures reflect the average value acquired from the nine approaches. NSLKDD has a mean of about 85.91, which is higher than that of UNSWNB15, which has a mean of around 77.13, smaller std. err. (Stand Error) indicate high precision in representing a sample's average as the population's one. In relation to UNSWNB15, it is essential to note that NSLKDD has a standard error of about 2.16, while for UNSWNB15, it is about 4.22, thus indicating a more precise estimation of its MEAN. The 95% and 99.9% confidence intervals(CI) give an estimate within which the true mean of the population will lie, assuming we have taken a representative sample. NSLKDD shows both a higher mean and a more precise estimation of that mean (as indicated by the more minor standard error and narrower confidence intervals). The interval between 80.92 and 90.90 contains the actual population mean for NSLKDD with a relatively confident level of likelihood, though with significant probability errors. In contrast, in the case of UNSWNB15, this interval holds between 67.40 and 86.85 because these CIs are more extensive due to big standard errors. The wider range interval (55.87­98.39) accounts for 0.01% margin error at most for UNWNB15's estimated means with such a high degree certainty level as usually happens when raising confidence level beyond lower limits where narrower ones can be realized. Moreover, it should be noted that when compared to other measures, NSLKDD demonstrates broader ranges due to more minor standard errors. Thus, we can say that if the data completeness approach is used in evaluation studies, then NSLKDD would yield better results than KDDCUP99.
+V. Conclusion
+Current research on the application of deep learning approaches for network traffic classification has not fully utilized the structured information inherent in network traffic. We implemented a unique hybrid model termed MCL-FWA-BILSTM, which combines a Bidirectional Long Short-Term Memory (BILSTM) model with Sentiment Analysis (SA) trained with Random Forest learning. This strategy utilizes deep learning techniques for applications in Machine Learning (ML). The proposed approach utilizes feature weighting to enhance the
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+31 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+domain or pattern knowledge provided to the classifier. The FWA-BILSTM part of the approach provides a higher weight to the unique features that helps to distinguish the changes in the traffic. As a result, the classifier learns efficiently and distinguishes between attacks and normal class means while learning different types of attacks. The results of this process improve significantly when a less complex proposed model is used. In multiclass datasets, classes with few instances were enhanced by 6 to 10%, while classes with a large number of instances improved by 1­2%, indicating that we improved the main challenge class imbalance in the two classes by 0.8 to 0.9 percent. Additionally, our approach is significant because it enhances the real-time detection of attacker classes.
+The main limitation of the proposed research work is that it needs to improve the highlevel class imbalance present in other intrusion network datasets. So, future work will be based on different datasets that could be more balanced. The second limitation of the proposed work is that it will improve the accuracy of high imbalance data in multiclass classification. So, in future enhancements, improve the model and make it more generalized.
+Supporting information
+S1 File. Supporting Info File NSL KDD. UNSW-NB15 dataset can be downloaded from https://research.unsw.edu.au/projects/unsw-nb15-dataset. (ZIP)
+Author Contributions
+Conceptualization: Arshad Hashmi, Omar M. Barukab, Ahmad Hamza Osman. Data curation: Arshad Hashmi, Ahmad Hamza Osman. Formal analysis: Arshad Hashmi, Omar M. Barukab, Ahmad Hamza Osman. Funding acquisition: Arshad Hashmi, Ahmad Hamza Osman. Investigation: Arshad Hashmi, Omar M. Barukab, Ahmad Hamza Osman. Methodology: Arshad Hashmi, Ahmad Hamza Osman. Project administration: Arshad Hashmi, Ahmad Hamza Osman. Resources: Arshad Hashmi, Ahmad Hamza Osman. Software: Arshad Hashmi, Ahmad Hamza Osman. Supervision: Arshad Hashmi, Ahmad Hamza Osman. Validation: Arshad Hashmi, Ahmad Hamza Osman. Visualization: Arshad Hashmi, Ahmad Hamza Osman. Writing ­ original draft: Arshad Hashmi, Ahmad Hamza Osman. Writing ­ review & editing: Arshad Hashmi, Omar M. Barukab, Ahmad Hamza Osman.
+References
+1. Li Z, Qin Z, Huang K, Yang X.; Ye S(2017) Intrusion Detection Using Convolutional Neural Networks for Representation Learning. Springer International Publishing AG 2017 D, 858­866,https://doi.org/10. 1007/978-3-319-70139-4_87.
+2. Ieracitano C, Adeel A, Morabito FC, Hussain A (2020) A novel statistical analysis and autoencoder driven intelligent intrusion detection approach. Neurocomputing 387:51­62. https://doi.org/10.1016/j. neucom.2019.11.016.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+32 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+3. Khraisat A, Gondal I, Vamplew P, Kamruzzaman J (2019) Survey of intrusion detection systems: techniques, datasets and challenges. Cybersecurity 2:20. https://doi.org/10.1186/s42400-019-0038-7.
+4. Sultana N, Chilamkurti N, Peng W, Alhadad R (2019) Survey on SDN based network intrusion detection system using machine learning approaches. Peer-to-Peer Networking and Applications 12:493­501. https://doi.org/10.1007/s12083-017-0630-0.
+5. Garg S, Batra S (2017) A novel ensembled technique for anomaly detection. International Journal of Communication Systems 30:e3248. https://doi.org/10.1002/dac.3248.
+6. Mishra P, Varadharajan V, Tupakula U, Pilli ES (2019) A Detailed Investigation and Analysis of Using Machine Learning Techniques for Intrusion Detection. IEEE Communications Surveys & Tutorials 21:686­728. https://doi.org/10.1109/COMST.2018.2847722.
+7. Dong B, Wang X (2016) Comparison deep learning method to traditional methods using for network intrusion detection. In: 2016 8th IEEE International Conference on Communication Software and Networks (ICCSN). IEEE, 581­585,https://doi.org/10.1109/ICCSN.2016.7586590.
+8. Rushdi AM, Ba-rukab OM (2005) Fault-tree modelling of computer system security. International Journal of Computer Mathematics 82:805­819. https://doi.org/10.1080/00207160412331336017.
+9. Zhang H, Huang L, Wu CQ, Li Z (2020) An effective convolutional neural network based on SMOTE and Gaussian mixture model for intrusion detection in imbalanced dataset. Computer Networks 177:107315. https://doi.org/10.1016/j.comnet.2020.107315.
+10. Iwendi C, Khan S, Anajemba JH, et al (2020) The Use of Ensemble Models for Multiple Class and Binary Class Classification for Improving Intrusion Detection Systems. Sensors 20:2559. https://doi. org/10.3390/s20092559 PMID: 32365937
+11. Rekha G.; Malik S.; Tyagi A.K.; Nair M.M(2020) Intrusion Detection in Cyber Security: Role of Machine Learning and Data Mining in Cyber Security. Advances in Science, Technology and Engineering Systems Journal, https://doi.org/10.25046/aj050310.
+12. Yin C.; Zhu Y.; Fei J.; He X(2017) A Deep Learning Approach for Intrusion Detection Using Recurrent Neural Networks. IEEE Access, https://doi.org/10.1109/ACCESS.2017.2762418.
+13. Kim J, Kim J, Thi Thu H Le, Kim H (2016) Long Short Term Memory Recurrent Neural Network Classifier for Intrusion Detection. In: 2016 International Conference on Platform Technology and Service (PlatCon). IEEE, pp 1­5.
+14. Torres P, Catania C, Garcia S, Garino CG (2016) An analysis of Recurrent Neural Networks for Botnet detection behavior. In: 2016 IEEE Biennial Congress of Argentina (ARGENCON). IEEE, 1­6,https:// doi.org/10.1109/ARGENCON.2016.7585247.
+15. Muhuri PS, Chatterjee P, Yuan X, et al (2020) Using a Long Short-Term Memory Recurrent Neural Network (LSTM-RNN) to Classify Network Attacks. Information 11:243. https://doi.org/10.3390/ info11050243.
+16. Rodda S, Erothi USR (2016) Class imbalance problem in the Network Intrusion Detection Systems. In: 2016 International Conference on Electrical, Electronics, and Optimization Techniques (ICEEOT). IEEE, 2685­2688,https://doi.org/10.1109/ICEEOT.2016.7755181.
+17. Sohi SM, Seifert J-P, Ganji F (2018) RNNIDS: Enhancing Network Intrusion Detection Systems through Deep Learning. https://doi.org/10.1016/j.cose.2020.102151.
+18. Kunang YN, Nurmaini S, Stiawan D, Suprapto BY (2021) Attack classification of an intrusion detection system using deep learning and hyperparameter optimization. Journal of Information Security and Applications 58:102804. https://doi.org/10.1016/j.jisa.2021.102804.
+19. Di Mauro M, Galatro G, Fortino G, Liotta A (2021) Supervised Feature Selection Techniques in Network Intrusion Detection: a Critical Review. https://doi.org/10.1016/j.engappai.2021.104216.
+20. Toldinas J, Venckauskas A, Damasevicius R, et al (2021) A Novel Approach for Network Intrusion Detection Using Multistage Deep Learning Image Recognition. Electronics 10:1854. https://doi.org/10. 3390/electronics10151854.
+21. Alzahrani AO, Alenazi MJF (2021) Designing a Network Intrusion Detection System Based on Machine Learning for Software Defined Networks. Future Internet 13:111. https://doi.org/10.3390/fi13050111.
+22. Khan MA (2021) HCRNNIDS: Hybrid Convolutional Recurrent Neural Network-Based Network Intrusion Detection System. Processes 9:834. https://doi.org/10.3390/pr9050834.
+23. Krishnaveni S, Sivamohan S, Sridhar SS, Prabakaran S (2021) Efficient feature selection and classification through ensemble method for network intrusion detection on cloud computing. Cluster Computing 24:1761­1779. https://doi.org/10.1007/s10586-020-03222-y.
+24. Fu Y, Du Y, Cao Z, et al (2022) A Deep Learning Model for Network Intrusion Detection with Imbalanced Data. Electronics 11:898. https://doi.org/10.3390/electronics11060898.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+33 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+25. Dutta V, Chora M, Kozik R, Pawlicki M (2021) Hybrid Model for Improving the Classification Effectiveness of Network Intrusion Detection. pp 405­414,https://doi.org/10.1007/978-3-030-57805-3_38.
+26. Alikhanov J, Jang R, Abuhamad M, et al (2022) Investigating the Effect of Traffic Sampling on Machine Learning-Based Network Intrusion Detection Approaches. IEEE Access 10:5801­5823. https://doi.org/ 10.1109/ACCESS.2021.3137318.
+27. Aljbali S, Roy K (2021) Anomaly Detection Using Bidirectional LSTM. pp 612­619, 1250. Springer, Cham. https://doi.org/10.1007/978-3-030-55180-3_45.
+28. Kasongo SM, Sun Y (2020) A deep learning method with wrapper based feature extraction for wireless intrusion detection system. Computers & Security 92:101752. https://doi.org/10.1016/j.cose.2020. 101752.
+29. Tang Y, Gu L, Wang L (2021) Deep Stacking Network for Intrusion Detection. Sensors 22:25. https:// doi.org/10.3390/s22010025 PMID: 35009568
+30. Amouri A, Alaparthy VT, Morgera SD (2020) A Machine Learning Based Intrusion Detection System for Mobile Internet of Things. Sensors 20:461. https://doi.org/10.3390/s20020461 PMID: 31947567
+31. Yu Z, Li T, Luo G, et al (2018) Convolutional networks with cross-layer neurons for image recognition. Information Sciences 433­ 434:241­254. https://doi.org/10.1016/j.ins.2017.12.045.
+32. Luo W, Li Y, Urtasun R, Zemel R (2017) Understanding the Effective Receptive Field in Deep Convolutional Neural Networks, arXiv, https://arxiv.org/abs/1701.04128.
+33. Greff K, Srivastava RK, Koutn´ik J, et al (2015) LSTM: A Search Space Odyssey. https://doi.org/10. 1109/TNNLS.2016.2582924.
+34. Ordo´ñez F, Roggen D (2016) Deep Convolutional and LSTM Recurrent Neural Networks for Multimodal Wearable Activity Recognition. Sensors 16:115. https://doi.org/10.3390/s16010115 PMID: 26797612
+35. Gers FA, Schmidhuber J, Cummins F (2000) Learning to Forget: Continual Prediction with LSTM. Neural Computation 12:2451­2471. https://doi.org/10.1162/089976600300015015 PMID: 11032042
+36. Kim G, Yi H, Lee J, et al (2016) LSTM-Based System-Call Language Modeling and Robust Ensemble Method for Designing Host-Based Intrusion Detection Systems, arXiv preprint arXiv:1611.01726.
+37. Du S, Li T, Yang Y, Horng S-J (2020) Multivariate time series forecasting via attention-based encoder­ decoder framework. Neurocomputing 388:269­279. https://doi.org/10.1016/j.neucom.2019.12.118.
+38. Yang R, Qu D, Gao Y, et al (2019) nLSALog: An Anomaly Detection Framework for Log Sequence in Security Management. IEEE Access 7:181152­181164. https://doi.org/10.1109/ACCESS.2019. 2953981.
+39. Lee T-H, Ullah A, Wang R (2020) Bootstrap Aggregating and Random Forest. Macroeconomic Forecasting in the Era of Big Data Macroeconomic Forecasting in the Era of Big Data; Springer pp 389­429, https://doi.org/10.1007/978-3-030-31150-6_13.
+40. Farnaaz N, Jabbar MA (2016) Random Forest Modeling for Network Intrusion Detection System. Procedia Computer Science 89:213­217. https://doi.org/10.1016/j.procs.2016.06.047.
+41. Chang Y, Li W, Yang Z (2017) Network Intrusion Detection Based on Random Forest and Support Vector Machine. In: 22017 IEEE International Conference on Computational Science and Engineering (CSE) and IEEE International Conference on Embedded and Ubiquitous Computing (EUC). IEEE, pp 635­638.
+42. Zhang Jiong, Zulkernine M, Haque A (2008) Random-Forests-Based Network Intrusion Detection Systems. IEEE Transactions on Systems, Man, and Cybernetics, 38:649­659. https://doi.org/10.1109/ TSMCC.2008.923876.
+43. Dong R, Li X, Zhang Q, Yuan H (2020) Network intrusion detection model based on multivariate correlation analysis­long short-time memory network. IET Information Security 14:166­174. https://doi.org/ 10.1049/iet-ifs.2019.0294.
+44. Tang C, Luktarhan N, Zhao Y (2020) SAAE-DNN: Deep Learning Method on Intrusion Detection. Symmetry 12:1695. https://doi.org/10.3390/sym12101695.
+45. Kasongo SM (2023) A deep learning technique for intrusion detection system using a Recurrent Neural Networks based framework. Computer Communications 199:113­125. https://doi.org/10.1016/j. comcom.2022.12.010.
+46. Hsu C-M, Hsieh H-Y, Prakosa SW, et al (2019) Using Long-Short-Term Memory Based Convolutional Neural Networks for Network Intrusion Detection. Int. Wir. Internet Conf. Springer, Cham, pp 86­94.
+47. Gupta N, Jindal V, Bedi P (2021) LIO-IDS: Handling class imbalance using LSTM and improved one-vsone technique in intrusion detection system. Computer Networks 192:108076. https://doi.org/10.1016/ j.comnet.2021.108076.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+34 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+48. Chohra A, Shirani P, Karbab EB, Debbabi M (2022) Chameleon: Optimized feature selection using particle swarm optimization and ensemble methods for network anomaly detection. Computers & Security 117:102684. https://doi.org/10.1016/j.cose.2022.102684.
+49. Wu K, Chen Z, Li W (2018) A Novel Intrusion Detection Model for a Massive Network Using Convolutional Neural Networks. IEEE Access 6:50850­50859. https://doi.org/10.1109/ACCESS.2018. 2868993.
+50. Yang Y, Zheng K, Wu C, et al (2019) Building an Effective Intrusion Detection System Using the Modified Density Peak Clustering Algorithm and Deep Belief Networks. Applied Sciences 9:238. https://doi. org/10.3390/app9020238.
+51. Min B, Yoo J, Kim S, et al (2021) Network Anomaly Detection Using Memory-Augmented Deep Autoencoder. IEEE Access 9:104695­104706. https://doi.org/10.1109/ACCESS.2021.3100087.
+52. Al-Qatf M, Lasheng Y, Al-Habib M, Al-Sabahi K (2018) Deep Learning Approach Combining Sparse Autoencoder With SVM for Network Intrusion Detection. IEEE Access 6:52843­52856. https://doi.org/ 10.1109/ACCESS.2018.2869577.
+53. Tang TA, Mhamdi L, McLernon D, et al (2016) Deep learning approach for Network Intrusion Detection in Software Defined Networking. In: 2016 International Conference on Wireless Networks and Mobile Communications (WINCOM). IEEE, 258­263,https://doi.org/10.1109/WINCOM.2016.7777224.
+54. Li Z, Qin Z (2018) A Semantic Parsing Based LSTM Model for Intrusion Detection. 600­609,https://doi. org/10.1007/978-3-030-04212-7_53.
+55. Li Z, Rios ALG, Xu G, Trajkovic L (2019) Machine Learning Techniques for Classifying Network Anomalies and Intrusions. In: 2019 IEEE International Symposium on Circuits and Systems (ISCAS). IEEE, 1­5,https://doi.org/10.1109/ISCAS.2019.8702583.
+56. Wang S, Xia C, Wang T (2019) A Novel Intrusion Detector Based on Deep Learning Hybrid Methods. In: 2019 IEEE 5th Intl Conference on Big Data Security on Cloud (BigDataSecurity), IEEE Intl Conference on High Performance and Smart Computing, (HPSC) and IEEE Intl Conference on Intelligent Data and Security (IDS). IEEE, pp 300­305, https://doi.org/10.1109/BigDataSecurity-HPSC-IDS.2019. 00062.
+57. Jiang K, Wang W, Wang A, Wu H (2020) Network Intrusion Detection Combined Hybrid Sampling With Deep Hierarchical Network. IEEE Access 8:32464­32476. https://doi.org/10.1109/ACCESS.2020. 2973730.
+58. Wisanwanichthan T, Thammawichai M (2021) A Double-Layered Hybrid Approach for Network Intrusion Detection System Using Combined Naive Bayes and SVM. IEEE Access 9:138432­138450. https://doi.org/10.1109/ACCESS.2021.3118573.
+59. Baig MM, Awais MM, El-Alfy E-SM (2017) A multiclass cascade of artificial neural network for network intrusion detection. Journal of Intelligent & Fuzzy Systems 32:2875­2883. https://doi.org/10.3233/ JIFS-169230.
+60. Yang Y, Zheng K, Wu C, Yang Y (2019) Improving the Classification Effectiveness of Intrusion Detection by Using Improved Conditional Variational AutoEncoder and Deep Neural Network. Sensors 19:2528. https://doi.org/10.3390/s19112528 PMID: 31159512
+61. Mebawondu JO, Alowolodu OD, Mebawondu JO, Adetunmbi AO (2020) Network intrusion detection system using supervised learning paradigm. Scientific African 9:e00497. https://doi.org/10.1016/j.sciaf. 2020.e00497.
+62. Mahalakshmi G, Uma E, Aroosiya M, Vinitha M (2021) Intrusion Detection System Using Convolutional Neural Network on UNSW NB15 Dataset, Advances in Parallel Computing Technologies and Applications. IOS Press, 1­8. https://doi.org/10.3233/APC210116.
+63. Roy A, Singh KJ (2021) Multi-classification of UNSW-NB15 Dataset for Network Anomaly Detection System. 429­451, https://doi.org/10.1007/978-981-15-5077-5_40.
+64. Hu W, Gao J, Wang Y, et al (2014) Online Adaboost-Based Parameterized Methods for Dynamic Distributed Network Intrusion Detection. IEEE Transactions on Cybernetics 44:66­82. https://doi.org/10. 1109/TCYB.2013.2247592 PMID: 23757534
+65. Vinayakumar R, Soman KP, Poornachandran P (2020) Evaluation of Recurrent Neural Network and its Variants for Intrusion Detection System (IDS). In: Deep Learning and Neural Networks. IGI Global, pp 295­316,https://doi.org/10.4018/978-1-7998-0414-7.ch018.
+66. Wang W, Sheng Y, Wang J, et al (2018) HAST-IDS: Learning Hierarchical Spatial-Temporal Features Using Deep Neural Networks to Improve Intrusion Detection. IEEE Access 6:1792­1806. https://doi. org/10.1109/ACCESS.2017.2780250.
+67. Kuang F, Xu W, Zhang S (2014) A novel hybrid KPCA and SVM with GA model for intrusion detection. Applied Soft Computing 18:178­184. https://doi.org/10.1016/j.asoc.2014.01.028.
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+35 / 36
+
+PLOS ONE
+
+Enhancing network intrusion detection using a hybrid model MCL-FWA-BILSTM
+68. Yu Y, Bian N (2020) An Intrusion Detection Method Using Few-Shot Learning. IEEE Access 8:49730­ 49740. https://doi.org/10.1109/ACCESS.2020.2980136.
+69. Mohammadpour L., Ling T. C., Liew C. S., &Aryanfar A. (2020). A mean convolutional layer for intrusion detection system. Security and Communication Networks, 2020, 1­16, https://doi.org/10.1155/2020/ 8891185
+70. Patra R. K., Patil S. N., Falkowski-Gilski P., Lubniewski Z., &Poongodan R. (2022). Feature Weighted Attention--Bidirectional Long Short Term Memory Model for Change Detection in Remote Sensing Images. Remote Sensing, 14(21), 5402. https://doi.org/10.3390/rs14215402
+
+PLOS ONE | https://doi.org/10.1371/journal.pone.0302294 May 23, 2024
+
+36 / 36
+
+
