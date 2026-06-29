@@ -1,27 +1,18 @@
 import torch
-
-from nids_dl.layers import BiLSTM
-
+from nids_dl.layers.custom_rnn import CustomBiLSTM
 
 def test_bilstm_shapes():
-    m = BiLSTM(hidden_size=64)
-    x = torch.randn(8, 120)
-    out, fbl = m(x)
-    assert out.shape == (8, 120, 128)
+    m = CustomBiLSTM(input_size=12, hidden_size=64, wc_size=56)
+    x = torch.randn(8, 10, 12)
+    wc = torch.randn(8, 56)
+    out, fbl = m(x, wc)
+    assert out.shape == (8, 10, 128)
     assert fbl.shape == (8, 128)
 
-
-def test_bilstm_accepts_3d_input():
-    m = BiLSTM(hidden_size=32)
-    x = torch.randn(4, 120, 1)
-    out, fbl = m(x)
-    assert out.shape == (4, 120, 64)
-    assert fbl.shape == (4, 64)
-
-
 def test_bilstm_backward():
-    m = BiLSTM(hidden_size=16)
-    x = torch.randn(2, 120, requires_grad=True)
-    _, fbl = m(x)
+    m = CustomBiLSTM(input_size=12, hidden_size=64, wc_size=56)
+    x = torch.randn(2, 10, 12, requires_grad=True)
+    wc = torch.randn(2, 56, requires_grad=True)
+    _, fbl = m(x, wc)
     fbl.sum().backward()
     assert x.grad is not None
