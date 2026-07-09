@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 
 COLUMNS = [
     "duration", "protocol_type", "service", "flag", "src_bytes", "dst_bytes",
@@ -87,9 +87,16 @@ def preprocess(
     X_train = combined.iloc[:n_train].to_numpy(dtype=np.float32)
     X_test = combined.iloc[n_train:].to_numpy(dtype=np.float32)
 
-    scaler = MinMaxScaler()
+    scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train).astype(np.float32)
     X_test = scaler.transform(X_test).astype(np.float32)
+
+    # Reshape to (N, 10, 12) to match paper's 2D spatial mapping
+    if X_train.shape[1] == 120:
+        X_train = X_train.reshape(-1, 10, 12)
+        X_test = X_test.reshape(-1, 10, 12)
+    else:
+        print(f"Warning: Expected 120 features, got {X_train.shape[1]}. Reshaping skipped.")
 
     return X_train, X_test, y_bin_train, y_bin_test, y_mul_train, y_mul_test, feature_names
 

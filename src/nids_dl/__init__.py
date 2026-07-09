@@ -1,10 +1,10 @@
 from .extractor import Extractor, ExtractorWithHead
-from .layers import BiLSTM, FWA, MCL
-from .rf_head import RFConfig, evaluate, fit_rf
+from .layers import CustomBiLSTM, FWA, MCL
+from .rf_head import TreeConfig, evaluate, fit_rf, fit_xgb
 from .train import TrainConfig, extract_features, train_extractor
 
 __all__ = [
-    "BiLSTM",
+    "CustomBiLSTM",
     "FWA",
     "MCL",
     "Extractor",
@@ -12,7 +12,8 @@ __all__ = [
     "TrainConfig",
     "train_extractor",
     "extract_features",
-    "RFConfig",
+    "TreeConfig",
     "fit_rf",
+    "fit_xgb",
     "evaluate",
 ]

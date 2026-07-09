@@ -17,7 +17,7 @@ from .extractor import Extractor, ExtractorWithHead
 
 @dataclass
 class TrainConfig:
-    epochs: int = 10
+    epochs: int = 100
     batch_size: int = 256
     lr: float = 1e-3
     weight_decay: float = 0.0
@@ -26,6 +26,8 @@ class TrainConfig:
     log_every: int = 0                                        # 0 = silent
     seed: int = 0
     extractor_kwargs: dict = field(default_factory=dict)
+    target_val_acc: float = 0.90
+    early_stopping_patience: int = 5
 
 
 def make_loader(X: torch.Tensor, y: torch.Tensor, cfg: TrainConfig, shuffle: bool) -> DataLoader:
@@ -67,6 +69,9 @@ def train_extractor(
     )
 
     history: list[dict] = []
+    best_val_loss = float("inf")
+    patience_counter = 0
+
     for epoch in range(cfg.epochs):
         model.train()
         running, seen, correct = 0.0, 0, 0
@@ -93,11 +98,30 @@ def train_extractor(
             "train_loss": running / seen,
             "train_acc": correct / seen,
         }
+        
         if val_loader is not None:
-            row.update(_evaluate(model, val_loader, loss_fn, cfg.device))
+            val_metrics = _evaluate(model, val_loader, loss_fn, cfg.device)
+            row.update(val_metrics)
+            
         history.append(row)
         if cfg.log_every:
             print(row)
+
+        if val_loader is not None:
+            val_acc = val_metrics["val_acc"]
+            val_loss = val_metrics["val_loss"]
+            
+            if val_acc >= cfg.target_val_acc:
+                print(f"Reached target validation accuracy: {val_acc:.4f} >= {cfg.target_val_acc}. Stopping.")
+                break
+                
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                patience_counter = 0
+            else:
+                patience_counter += 1
+                if patience_counter >= cfg.early_stopping_patience:
+                    print(f"Validation loss did not improve for {cfg.early_stopping_patience} epochs.")
 
     return extractor, history
 
