@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="sdkName" value="Python 3.11 (nids_dl)" />
+    <option name="sdkName" value="SSH (sftp://sduai@100.70.243.107:2222/home/sduai/.virtualenvs/connection/bin/python)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="SSH (sftp://sduai@100.70.243.107:2222/tmp/pycharm_project_dbc340c7/.venv/bin/python)" project-jdk-type="Python SDK" />
-  <component name="PyPackaging">
-    <option name="earlyReleasesAsUpgrades" value="true" />
-  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="SSH (sftp://sduai@100.70.243.107:2222/home/sduai/.virtualenvs/connection/bin/python) (2)" project-jdk-type="Python SDK" />
 </project>

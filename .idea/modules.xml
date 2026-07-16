@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/nids_dl.iml" filepath="$PROJECT_DIR$/.idea/nids_dl.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/nids_dl@1.iml" filepath="$PROJECT_DIR$/.idea/nids_dl@1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/connection.iml" filepath="$PROJECT_DIR$/.idea/connection.iml" />
     </modules>
   </component>
 </project>
