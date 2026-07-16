@@ -1,25 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="sduai@100.70.243.107:2222 password (3)" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="sduai@100.70.243.107:2222 key (2)" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="sduai@100.70.243.107:2222 password">
+      <paths name="sduai@100.70.243.107:2222 key">
         <serverdata>
           <mappings>
             <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="sduai@100.70.243.107:2222 password (2)">
+      <paths name="sduai@100.70.243.107:2222 key (2)">
         <serverdata>
           <mappings>
-            <mapping deploy="/mnt/c/Users/sduai/Documents/projis/research/nids_dl/nids-research" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="sduai@100.70.243.107:2222 password (3)">
+      <paths name="sduai@100.70.243.107:2222 key (3)">
         <serverdata>
           <mappings>
-            <mapping deploy="/mnt/c/Users/sduai/Documents/projis/research/nids_dl/nids-research" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sduai@100.70.243.107:2222 key (4)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sduai@100.70.243.107:2222 key (5)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sduai@100.70.243.107:2222 key (6)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sduai@100.70.243.107:2222 key (8)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="sduai@100.70.243.107:2222 key (9)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_dbc340c7" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
